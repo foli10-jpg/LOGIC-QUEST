@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGIC QUEST</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:#fff;min-height:100vh}
+
+header{background:#020617;padding:20px;text-align:center}
+header h1{color:#38bdf8;font-size:32px}
+header p{opacity:.8}
+
+.container{max-width:1100px;margin:auto;padding:20px}
+
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.stat{flex:1;min-width:180px;background:#020617;padding:15px;border-radius:12px;text-align:center}
+.stat h3{color:#38bdf8}
+
+.game-box{background:#020617;border-radius:16px;padding:25px}
+
+.question{font-size:20px;margin-bottom:20px}
+
+.answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.answers button{padding:15px;border:none;border-radius:12px;background:#1e293b;color:#fff;font-size:16px;cursor:pointer;transition:.3s}
+.answers button:hover{background:#38bdf8;color:#000}
+
+.log{margin-top:20px;font-size:14px;opacity:.8}
+
+.progress{height:10px;background:#1e293b;border-radius:20px;overflow:hidden;margin:15px 0}
+.progress div{height:100%;width:0;background:#38bdf8;transition:.4s}
+
+.level-up{display:none;text-align:center;margin-top:30px}
+.level-up h2{color:#4ade80}
+.level-up button{margin-top:15px;padding:12px 20px;border:none;border-radius:20px;background:#4ade80;color:#000;font-size:16px;cursor:pointer}
+
+footer{text-align:center;padding:15px;font-size:13px;opacity:.6}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LOGIC QUEST</h1>
+  <p>Lojë e fortë logjike – vendos trurin në provë 🧠</p>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat"><h3>Level</h3><p id="level">1</p></div>
+    <div class="stat"><h3>Pikë</h3><p id="score">0</p></div>
+    <div class="stat"><h3>Gabime</h3><p id="mistakes">0</p></div>
+  </div>
+
+  <div class="game-box">
+    <div class="question" id="question">Pyetja</div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="answers" id="answers"></div>
+    <div class="log" id="log"></div>
+
+    <div class="level-up" id="levelUp">
+      <h2>LEVEL UP 🎉</h2>
+      <button onclick="nextLevel()">Vazhdo</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Logic Quest © Projekt HTML edukativ
+</footer>
+
+<script>
+let level=1,score=0,mistakes=0,progress=0;
+
+const questions=[
+ {q:"Cili numër mungon: 2, 4, 8, 16, ?",a:["18","24","32","20"],c:2},
+ {q:"Nëse 3 makina bëjnë 3 lodra në 3 minuta, sa makina duhen për 6 lodra në 6 minuta?",a:["3","6","9","12"],c:0},
+ {q:"Cili është i ndryshëm?",a:["Katërkëndësh","Trekëndësh","Rreth","Pesëkëndësh"],c:2},
+ {q:"Nëse A=1, B=2, C=3… sa është D+C?",a:["5","6","7","8"],c:1},
+ {q:"Sa është gjysma e 100 plus 10?",a:["60","55","50","40"],c:0}
+];
+let index=0;
+
+function load(){
+ const q=questions[index];
+ document.getElementById('question').innerText=q.q;
+ const box=document.getElementById('answers');
+ box.innerHTML='';
+ q.a.forEach((x,i)=>{
+  const b=document.createElement('button');
+  b.innerText=x;
+  b.onclick=()=>check(i);
+  box.appendChild(b);
+ });
+ update();
+}
+
+function check(i){
+ const log=document.getElementById('log');
+ if(i===questions[index].c){
+  score+=10;
+  progress+=20;
+  log.innerText='Saktë ✔️';
+ } else{
+  mistakes++;
+  log.innerText='Gabim ❌';
+ }
+ index++;
+ if(index>=questions.length){
+  document.getElementById('levelUp').style.display='block';
+ } else{
+  load();
+ }
+ update();
+}
+
+function update(){
+ document.getElementById('level').innerText=level;
+ document.getElementById('score').innerText=score;
+ document.getElementById('mistakes').innerText=mistakes;
+ document.getElementById('bar').style.width=progress+'%';
+}
+
+function nextLevel(){
+ level++;
+ index=0;
+ progress=0;
+ document.getElementById('levelUp').style.display='none';
+ load();
+}
+
+load();
+</script>
+
+</body>
+</html>
